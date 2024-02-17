@@ -25,7 +25,7 @@ public class SpriteShapeSaveAndLoad : MonoBehaviour
         
     }
 
-    public void Save(SpriteShapeController[] shapeInstance)
+    public void Save(Spline[] shapeInstance, float[][] transformPositions)
     {
         BinaryFormatter bf = new BinaryFormatter();
         FileStream file;
@@ -40,7 +40,7 @@ public class SpriteShapeSaveAndLoad : MonoBehaviour
         }
 
 
-        SaveData data = new SaveData(shapeInstance);
+        SaveData data = new SaveData(shapeInstance, transformPositions);
         bf.Serialize(file, data);
 
         file.Close();
@@ -56,10 +56,10 @@ public class SpriteShapeSaveAndLoad : MonoBehaviour
             FileStream file = File.Open(Application.persistentDataPath + "/save.dat", FileMode.Open);
             SaveData data = (SaveData)bf.Deserialize(file);
 
-            foreach(SpriteShapeController shape in data.shapeControllers)
-            {
-                Instantiate(shape);
-            }
+            //foreach(SpriteShapeController shape in data.shapeControllers)
+            //{
+            //    Instantiate(shape);
+            //}
             file.Close();
             Debug.Log("Load SUCCESS!");
         }
@@ -69,13 +69,28 @@ public class SpriteShapeSaveAndLoad : MonoBehaviour
 }
 
 
+//[Serializable]
+//public class BORKEDSaveData
+//{
+//    public SpriteShapeController[] shapeControllers;
+    
+//    public BORKEDSaveData(SpriteShapeController[] shapeInstance)
+//    {
+//        shapeControllers = shapeInstance;
+//    }
+//}
+
 [Serializable]
 public class SaveData
 {
-    public SpriteShapeController[] shapeControllers;
-    
-    public SaveData(SpriteShapeController[] shapeInstance)
+    public Spline[] splines;
+    public float[][] controllerTransforms; //store the transform positions from all of the sprite controllers that hold the spline.
+
+    public SaveData(Spline[] shapeInstance , float[][] transformPositions)
     {
-        shapeControllers = shapeInstance;
+        splines = shapeInstance;
+        controllerTransforms = transformPositions;
     }
+
+
 }

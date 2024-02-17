@@ -23,8 +23,8 @@ public class PlayerBehaviour : MonoBehaviour
         void Start()
     {
         //LOAD SAVE
-        SpriteShapeSaveAndLoad = GetComponent<SpriteShapeSaveAndLoad>();
-        SpriteShapeSaveAndLoad.Load();
+        //SpriteShapeSaveAndLoad = GetComponent<SpriteShapeSaveAndLoad>();
+        //SpriteShapeSaveAndLoad.Load();
 
 
         rigidbody = GetComponent<Rigidbody2D>();
@@ -63,13 +63,24 @@ public class PlayerBehaviour : MonoBehaviour
 
 
                 GameObject[] shapes = GameObject.FindGameObjectsWithTag("SpriteShape");
-                SpriteShapeController[] spriteShapeControllers = new SpriteShapeController[shapes.Length-1];
+                Spline[] shapeSplines = new Spline[shapes.Length - 1];
+                Vector3 rawTransformPosition;
+                float[][] transformPositions = new float[shapes.Length][];
+                int index = 0;
+
                 foreach (GameObject shape in shapes)
                 {
-                    spriteShapeControllers.Append(shape.GetComponent < SpriteShapeController>());
+                    shapeSplines.Append(shape.GetComponent<SpriteShapeController>().spline);
+                    rawTransformPosition = shape.GetComponent<Transform>().position;
+                    
+                    transformPositions[index][0] = rawTransformPosition.x;
+                    transformPositions[index][1] = rawTransformPosition.y;
+                    transformPositions[index][2] = rawTransformPosition.z;
+
+                    index++;
                 }
 
-                SpriteShapeSaveAndLoad.Save(spriteShapeControllers);
+                SpriteShapeSaveAndLoad.Save(shapeSplines , transformPositions);
             }
         }
         
