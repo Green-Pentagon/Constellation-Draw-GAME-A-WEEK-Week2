@@ -174,5 +174,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a6af66b3feb2503409f5dfcc37e54d0f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  LifeReadout: {fileID: 0}
-  NextRefillPointer: {fileID: 0}
+  ORIGINALCopySSC: {fileID: 7273957610035778146, guid: abe27c451115f7b46b8720923a89acbf, type: 3}

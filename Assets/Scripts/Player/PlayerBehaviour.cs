@@ -1,104 +1,125 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.U2D;
 
 public class PlayerBehaviour : MonoBehaviour
 {
-    public TextMeshProUGUI LifeReadout;
     
+    public SpriteShapeController ORIGINALCopySSC;
+    private SpriteShapeSaveAndLoad SpriteShapeSaveAndLoad;
+    private SpriteShapeController spriteShapeController;
+    private Spline ShapeSpline;
     private Rigidbody2D rigidbody;
-    private SpriteRenderer SpriteRenderer;
-    private TrailRenderer TrailRenderer;
+
     private float propulsionMultiplier = 15.0f; //multiplier to force of propulsion
-    private float LifeMaxCapacity = 10.0f; //o2 tank max capacity
-    private float LifeRemaining;           //o2 tank remaining capacity
-    private float LifeDecay = 1.0f;        //how many units of o2 in tank decay every tick
-    private float LifeDecayDelay = 1.0f;   //delay between tank o2 decay
-    private float LifeDecayDelayTimer;     //timer between next decay of o2 tank
-    private bool trailEmitting = true;
-
-    public bool PlayerDead()
-    {
-        return (Vector2.Equals(rigidbody.velocity , Vector2.zero) && LifeRemaining <= 0.0f);
-    }
-
-
-    void DecayLife(bool forMovement)
-    {
-        
-        if (LifeDecayDelayTimer > 0.0f && forMovement) //if using for propulsion, decay o2 at a rate
-        {
-            LifeDecayDelayTimer -= Time.fixedDeltaTime;
-        }
-        else // if using for refilling suit OR delay from propulsion is over.
-        {
-            //NOTE: if this is exploited or allows the user to get more o2 from a fixed capacity (which it currently does) extra check can be added to fix this.
-            LifeRemaining -= LifeDecay;
-            LifeDecayDelayTimer = LifeDecayDelay;
-        }
-        
-    }
-
-    void UpdateSpriteAndTrail()
-    {
-        SpriteRenderer.color = new Color(SpriteRenderer.color.r, SpriteRenderer.color.g, SpriteRenderer.color.b,(LifeRemaining/LifeMaxCapacity));
-        //TrailRenderer.startWidth = (LifeRemaining / LifeMaxCapacity);
-    }
-
+    private int currentVerticeIndex = 1;
+    private bool drawing = true;
 
         // Start is called before the first frame update
         void Start()
     {
-        rigidbody = GetComponent<Rigidbody2D>();
-        SpriteRenderer = GetComponent<SpriteRenderer>();
-        TrailRenderer = GetComponent<TrailRenderer>();
+        //LOAD SAVE
+        SpriteShapeSaveAndLoad = GetComponent<SpriteShapeSaveAndLoad>();
+        SpriteShapeSaveAndLoad.Load();
 
-        LifeRemaining = LifeMaxCapacity;
-        LifeDecayDelayTimer = LifeDecayDelay;
+
+        rigidbody = GetComponent<Rigidbody2D>();
+
+        //instantiate a new copy of shape from prefab
+        spriteShapeController = Instantiate(ORIGINALCopySSC, Vector3.zero, transform.rotation);
+
+        ShapeSpline = spriteShapeController.spline;
+        ShapeSpline.SetPosition(0, transform.position);
+        ShapeSpline.InsertPointAt(currentVerticeIndex, transform.position);
+        
     }
 
     // Update is called once per frame
     void Update()
     {
+        bool AddVertice = Input.GetKeyDown(KeyCode.Mouse0);
+        bool RemoveVertice = Input.GetKeyDown(KeyCode.Mouse1);
+        bool FinaliseShape = Input.GetKeyDown(KeyCode.Return); //double check this works for regular enter key!
 
-        LifeReadout.text = "Life Remaining: " + (int)LifeRemaining + "/" + LifeMaxCapacity;
-
-        bool toggleTrail = Input.GetKeyDown(KeyCode.Space);
-        if (toggleTrail)
+        if (drawing)
         {
-            trailEmitting = !trailEmitting;
-            TrailRenderer.emitting = trailEmitting;
+            if (AddVertice)
+            {
+                currentVerticeIndex++;
+                ShapeSpline.InsertPointAt(currentVerticeIndex, transform.position);
+            }
+            else if (RemoveVertice && currentVerticeIndex > 1)
+            {
+                ShapeSpline.RemovePointAt(currentVerticeIndex);
+                currentVerticeIndex--;
+            }
+            else if (FinaliseShape)
+            {
+                drawing = false;
+
+                GameObject[] shapes = GameObject.FindGameObjectsWithTag("SpriteShape");
+                Spline[] shapeSplines = new Spline[shapes.Length];
+                Vector3 TemporaryVector;
+                float[][,] verticePositions = new float[shapes.Length][,];
+
+                //for every spline found in the scene, extract its co-ordinates into jagged array
+                int index = 0;
+                foreach (GameObject shape in shapes)
+                {
+
+                    //grab the shape's spin- i mean spline of the current shape
+                    shapeSplines[index] = (shape.GetComponent<SpriteShapeController>().spline);
+                    verticePositions[index] = new float[shapeSplines[index].GetPointCount(), 3];
+ 
+                    //grab all the co-ordinates of the current spline and store them inside the nested
+                    for (int verticeIndex = 0; verticeIndex < shapeSplines[index].GetPointCount(); verticeIndex++)
+                    {
+                        TemporaryVector = shapeSplines[index].GetPosition(verticeIndex);
+                        verticePositions[index][verticeIndex, 0] = TemporaryVector.x;
+                        verticePositions[index][verticeIndex, 1] = TemporaryVector.y;
+                        verticePositions[index][verticeIndex, 2] = TemporaryVector.z;
+
+                    }                 
+
+                    index++;
+                }
+
+                SpriteShapeSaveAndLoad.Save(verticePositions);
+            }
         }
+        
+        
+
     }
 
     private void FixedUpdate()
     {
+
+        //movement
         float x_movement = Input.GetAxis("Horizontal");
         float y_movement = Input.GetAxis("Vertical");
         
-
-
-        if (LifeRemaining > 0.0f) //if alive and able to move/refill
+        if (drawing)
         {
-            
-
             if ((x_movement != 0.0f || y_movement != 0.0f)) //MOVEMENT TRIGGERED
             {
                 rigidbody.AddForce(new Vector2(x_movement, y_movement) * propulsionMultiplier, ForceMode2D.Force);
-                //rigidbody.AddRelativeForce(new Vector2(x_movement, y_movement) * propulsionMultiplier, ForceMode2D.Force);
-                DecayLife(true);
-                UpdateSpriteAndTrail();
+
             }
-
-
         }
-        else
+        try
         {
-            rigidbody.velocity = Vector2.zero;
+            ShapeSpline.SetPosition(currentVerticeIndex, transform.position);
         }
+        catch
+        {
 
-
+        }
+        
     }
 
 
@@ -106,7 +127,6 @@ public class PlayerBehaviour : MonoBehaviour
     {
         if(collision.gameObject.tag == "Refill")
         {
-            LifeRemaining = LifeMaxCapacity;
             Destroy(collision.gameObject);
         }
     }

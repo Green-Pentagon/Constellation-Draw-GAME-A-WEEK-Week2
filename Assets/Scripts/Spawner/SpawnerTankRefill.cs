@@ -7,7 +7,6 @@ public class SpawnerTankRefill : MonoBehaviour
 {
     public GameObject OxygenTank;
     public Object Player;
-    private PlayerBehaviour PlayerBehaviour;
     float[] SpawnArea = { -45.0f, -70.0f,
                            45.0f, 70.0f };
     int minimumCount = 1;
@@ -36,24 +35,19 @@ public class SpawnerTankRefill : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        PlayerBehaviour = Player.GetComponent<PlayerBehaviour>();
+
     }
 
     // Update is called once per frame
     void Update()
     {
         int TankCount = GameObject.FindGameObjectsWithTag("Refill").Length;
-        if (PlayerBehaviour.PlayerDead())
-        {
-            StartCoroutine(DestroyAllInstances());
-        }
-        else
-        {
+        
             if (TankCount < minimumCount)
             {
                 StartCoroutine(SpawnTanks());
             }
-        }
+        
         
         
 
