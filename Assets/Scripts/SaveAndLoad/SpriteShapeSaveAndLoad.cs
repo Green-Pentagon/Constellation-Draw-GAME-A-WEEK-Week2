@@ -74,18 +74,6 @@ public class SpriteShapeSaveAndLoad : MonoBehaviour
 
 }
 
-
-//[Serializable]
-//public class BORKEDSaveData
-//{
-//    public SpriteShapeController[] shapeControllers;
-    
-//    public BORKEDSaveData(SpriteShapeController[] shapeInstance)
-//    {
-//        shapeControllers = shapeInstance;
-//    }
-//}
-
 [Serializable]
 public class SaveData
 {
