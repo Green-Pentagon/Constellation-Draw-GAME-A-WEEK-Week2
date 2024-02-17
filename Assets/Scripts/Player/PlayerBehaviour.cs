@@ -64,23 +64,52 @@ public class PlayerBehaviour : MonoBehaviour
 
                 GameObject[] shapes = GameObject.FindGameObjectsWithTag("SpriteShape");
                 Spline[] shapeSplines = new Spline[shapes.Length];
-                Vector3 rawTransformPosition;
-                float[,] transformPositions = new float[shapes.Length,3];
+                Vector3 TemporaryVector;
+                float[] transformPositions = new float[3];
+                float[,] verticePositions;
+
+                float[][][] splineInformation = new float[shapes.Length][][];
+                
                 int index = 0;
 
                 foreach (GameObject shape in shapes)
                 {
+                    TemporaryVector = shape.GetComponent<SpriteShapeController>().transform.position;
+                    transformPositions[0] = TemporaryVector.x;
+                    transformPositions[1] = TemporaryVector.y;
+                    transformPositions[2] = TemporaryVector.z;
+
+
+                    //grab the shape's spin- i mean spline
                     shapeSplines[index] = (shape.GetComponent<SpriteShapeController>().spline);
-                    rawTransformPosition = shape.GetComponent<SpriteShapeController>().transform.position;
+                    verticePositions = new float[shapeSplines[index].GetPointCount(), 3];
+
+
+                    for (int verticeIndex = 0; verticeIndex < shapeSplines[index].GetPointCount(); verticeIndex++)
+                    {
+                        TemporaryVector = shapeSplines[index].GetPosition(verticeIndex);
+                        verticePositions[verticeIndex, 0] = TemporaryVector.x;
+                        verticePositions[verticeIndex, 1] = TemporaryVector.y;
+                        verticePositions[verticeIndex, 2] = TemporaryVector.z;
+
+                    }
+
+                    splineInformation[index][0][0] = transformPositions[0];
+                    splineInformation[index][0][1] = transformPositions[1];
+                    splineInformation[index][0][2] = transformPositions[2];
+
+                    for (int j = 0; j < shapeSplines[index].GetPointCount(); j++)
+                    {
+                        splineInformation[index][j + 1][0] = verticePositions[index,0];
+                        splineInformation[index][j + 1][1] = verticePositions[index,1];
+                        splineInformation[index][j + 1][2] = verticePositions[index,2];
+                    }
                     
-                    transformPositions[index,0] = rawTransformPosition.x;
-                    transformPositions[index,1] = rawTransformPosition.y;
-                    transformPositions[index,2] = rawTransformPosition.z;
 
                     index++;
                 }
 
-                SpriteShapeSaveAndLoad.Save(shapeSplines , transformPositions);
+                SpriteShapeSaveAndLoad.Save(splineInformation);
             }
         }
         
