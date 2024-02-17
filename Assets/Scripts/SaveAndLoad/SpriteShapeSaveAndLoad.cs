@@ -12,6 +12,7 @@ using UnityEngine.U2D;
 public class SpriteShapeSaveAndLoad : MonoBehaviour
 {
     //public SpriteShapeController ORIGINALCopySSC;
+    public GameObject debugSprite;
     
     // Start is called before the first frame update
     void Start()
@@ -25,7 +26,7 @@ public class SpriteShapeSaveAndLoad : MonoBehaviour
         
     }
 
-    public void Save(float[] transforms, float[][,] coords)
+    public void Save(float[][,] coords)
     {
         BinaryFormatter bf = new BinaryFormatter();
         FileStream file;
@@ -40,7 +41,7 @@ public class SpriteShapeSaveAndLoad : MonoBehaviour
         }
 
 
-        SaveData data = new SaveData(transforms, coords);
+        SaveData data = new SaveData( coords);
         bf.Serialize(file, data);
 
         file.Close();
@@ -56,10 +57,15 @@ public class SpriteShapeSaveAndLoad : MonoBehaviour
             FileStream file = File.Open(Application.persistentDataPath + "/save.dat", FileMode.Open);
             SaveData data = (SaveData)bf.Deserialize(file);
 
-            //foreach(SpriteShapeController shape in data.shapeControllers)
-            //{
-            //    Instantiate(shape);
-            //}
+            for(int i = 0; i < data.splineCoords.Length;i++)
+            {
+                for (int j = 0; j < (data.splineCoords[i].Length /3); j++)
+                {
+                    Instantiate(debugSprite, new Vector3(data.splineCoords[i][j, 0], data.splineCoords[i][j, 1], data.splineCoords[i][j, 2]), transform.rotation);  
+                }
+            }
+
+
             file.Close();
             Debug.Log("Load SUCCESS!");
         }
@@ -83,18 +89,11 @@ public class SpriteShapeSaveAndLoad : MonoBehaviour
 [Serializable]
 public class SaveData
 {
-    float[] splineTransforms;
-    float[][,] splineCoords;
+    //public float[] splineTransforms;
+    public float[][,] splineCoords;
 
-
-
-    //{ { {TrX,TrY,TrZ}, {X,Y,Z} ,...} ,...}
-    //[n][0] is the position of the transform of the spline (its centre/anchor)
-    //[n][1] is the 1st spline coordinate, where [n][1][0] is the x value
-
-    public SaveData(float[] transforms, float[][,] coords)
+    public SaveData( float[][,] coords)
     {
-        splineTransforms = transforms;
         splineCoords = coords;
     }
 

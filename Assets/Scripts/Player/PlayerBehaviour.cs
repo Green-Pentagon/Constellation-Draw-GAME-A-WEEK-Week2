@@ -74,10 +74,10 @@ public class PlayerBehaviour : MonoBehaviour
 
                 foreach (GameObject shape in shapes)
                 {
-                    TemporaryVector = shape.GetComponent<SpriteShapeController>().transform.position;
-                    transformPositions[0] = TemporaryVector.x;
-                    transformPositions[1] = TemporaryVector.y;
-                    transformPositions[2] = TemporaryVector.z;
+                    //TemporaryVector = shape.GetComponent<SpriteShapeController>().transform.position;
+                    //transformPositions[0] = TemporaryVector.x;
+                    //transformPositions[1] = TemporaryVector.y;
+                    //transformPositions[2] = TemporaryVector.z;
 
 
                     //grab the shape's spin- i mean spline
@@ -114,7 +114,7 @@ public class PlayerBehaviour : MonoBehaviour
                     index++;
                 }
 
-                SpriteShapeSaveAndLoad.Save(transformPositions, verticePositions);
+                SpriteShapeSaveAndLoad.Save( verticePositions);
             }
         }
         
