@@ -164,15 +164,7 @@ MonoBehaviour:
       spriteIndex: 0
       corner: 1
       m_CornerMode: 1
-    - position: {x: 0, y: 0, z: 0}
-      leftTangent: {x: -0.92568946, y: 0.003089726, z: -0}
-      rightTangent: {x: 0.92568946, y: -0.003089726, z: 0}
-      mode: 1
-      height: 1
-      spriteIndex: 0
-      corner: 1
-      m_CornerMode: 1
-    - position: {x: 2, y: 0, z: 0}
+    - position: {x: 1.9664865, y: 0, z: 0}
       leftTangent: {x: -0.78340197, y: 0.751823, z: 0}
       rightTangent: {x: 0.6651766, y: -0.6383633, z: -0}
       mode: 1
@@ -253,8 +245,8 @@ SpriteShapeRenderer:
   - {fileID: 21300000, guid: 608e61deb05c54660bebf5a4dd2ee02d, type: 3}
   - {fileID: 21300000, guid: 608e61deb05c54660bebf5a4dd2ee02d, type: 3}
   m_LocalAABB:
-    m_Center: {x: 0.00037574768, y: 0.13772076, z: 0}
-    m_Extent: {x: 2.3613043, y: 0.483122, z: 0}
+    m_Center: {x: -0.016669273, y: 0.25325757, z: 0}
+    m_Extent: {x: 2.351287, y: 0.59031826, z: 0}
   m_SpriteSortPoint: 0
 --- !u!4 &59619757
 Transform:
@@ -935,7 +927,9 @@ MonoBehaviour:
     Right Mouse = Remove previous point
 
     Enter
-    = Finalise Shape'
+    = Finalise Shape
+
+    T = DEBUG TRAIL REMOVE LATER'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -1568,6 +1562,10 @@ PrefabInstance:
       propertyPath: NextRefillPointer
       value: 
       objectReference: {fileID: 0}
+    - target: {fileID: 3012024685926193505, guid: be4d4f46ceebcf84797cc899e3e11521, type: 3}
+      propertyPath: spriteShapeController
+      value: 
+      objectReference: {fileID: 59619755}
     - target: {fileID: 3150567388204302853, guid: be4d4f46ceebcf84797cc899e3e11521, type: 3}
       propertyPath: m_Name
       value: PLAYER

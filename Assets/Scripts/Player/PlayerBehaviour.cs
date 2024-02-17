@@ -1,42 +1,55 @@
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.U2D;
 
 public class PlayerBehaviour : MonoBehaviour
 {
-    public TextMeshProUGUI LifeReadout;
-    
+    public SpriteShapeController spriteShapeController;
+    private Spline ShapeSpline;
     private Rigidbody2D rigidbody;
-    private SpriteRenderer SpriteRenderer;
-    private TrailRenderer TrailRenderer;
+
     private float propulsionMultiplier = 15.0f; //multiplier to force of propulsion
-    private bool trailEmitting = true;
+    private int currentVerticeIndex = 1;
+    private bool trailEmitting = false;
 
         // Start is called before the first frame update
         void Start()
     {
         rigidbody = GetComponent<Rigidbody2D>();
-        SpriteRenderer = GetComponent<SpriteRenderer>();
-        TrailRenderer = GetComponent<TrailRenderer>();
 
+        ShapeSpline = spriteShapeController.spline;
+        ShapeSpline.SetPosition(0, transform.position);
+        ShapeSpline.InsertPointAt(currentVerticeIndex, transform.position);
+        
     }
 
     // Update is called once per frame
     void Update()
     {
+        bool AddVertice = Input.GetKeyDown(KeyCode.Mouse0);
+        bool RemoveVertice = Input.GetKeyDown(KeyCode.Mouse1);
+        bool FinaliseShape = Input.GetKeyDown(KeyCode.Return); //double check this works for regular enter key!
 
-
-        bool toggleTrail = Input.GetKeyDown(KeyCode.T);
-        if (toggleTrail)
+        if (AddVertice)
         {
-            trailEmitting = !trailEmitting;
-            TrailRenderer.emitting = trailEmitting;
+            currentVerticeIndex++;
+            ShapeSpline.InsertPointAt(currentVerticeIndex, transform.position);
         }
+        else if (RemoveVertice && currentVerticeIndex >= 1)
+        {
+            ShapeSpline.RemovePointAt(currentVerticeIndex);
+            currentVerticeIndex--;
+        }
+
     }
 
     private void FixedUpdate()
     {
+
+        //movement
         float x_movement = Input.GetAxis("Horizontal");
         float y_movement = Input.GetAxis("Vertical");
         
@@ -46,6 +59,7 @@ public class PlayerBehaviour : MonoBehaviour
 
             }
 
+        ShapeSpline.SetPosition(currentVerticeIndex, transform.position);
     }
 
 
