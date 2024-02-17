@@ -10,7 +10,7 @@ public class PlayerBehaviour : MonoBehaviour
     private Rigidbody2D rigidbody;
     private SpriteRenderer SpriteRenderer;
     private TrailRenderer TrailRenderer;
-    private float propulsionMultiplier = 14.0f; //multiplier to force of propulsion
+    private float propulsionMultiplier = 15.0f; //multiplier to force of propulsion
     private float LifeMaxCapacity = 10.0f; //o2 tank max capacity
     private float LifeRemaining;           //o2 tank remaining capacity
     private float LifeDecay = 1.0f;        //how many units of o2 in tank decay every tick
