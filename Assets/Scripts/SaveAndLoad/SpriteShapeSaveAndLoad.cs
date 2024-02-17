@@ -25,7 +25,7 @@ public class SpriteShapeSaveAndLoad : MonoBehaviour
         
     }
 
-    public void Save(float[][][] coordinates)
+    public void Save(float[] transforms, float[][,] coords)
     {
         BinaryFormatter bf = new BinaryFormatter();
         FileStream file;
@@ -40,7 +40,7 @@ public class SpriteShapeSaveAndLoad : MonoBehaviour
         }
 
 
-        SaveData data = new SaveData(coordinates);
+        SaveData data = new SaveData(transforms, coords);
         bf.Serialize(file, data);
 
         file.Close();
@@ -83,15 +83,19 @@ public class SpriteShapeSaveAndLoad : MonoBehaviour
 [Serializable]
 public class SaveData
 {
-    float[][][] splineData;
+    float[] splineTransforms;
+    float[][,] splineCoords;
+
+
 
     //{ { {TrX,TrY,TrZ}, {X,Y,Z} ,...} ,...}
     //[n][0] is the position of the transform of the spline (its centre/anchor)
     //[n][1] is the 1st spline coordinate, where [n][1][0] is the x value
 
-    public SaveData(float[][][] Coordinates)
+    public SaveData(float[] transforms, float[][,] coords)
     {
-        splineData = Coordinates;
+        splineTransforms = transforms;
+        splineCoords = coords;
     }
 
 

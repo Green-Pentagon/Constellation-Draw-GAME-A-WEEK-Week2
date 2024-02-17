@@ -66,10 +66,10 @@ public class PlayerBehaviour : MonoBehaviour
                 Spline[] shapeSplines = new Spline[shapes.Length];
                 Vector3 TemporaryVector;
                 float[] transformPositions = new float[3];
-                float[,] verticePositions;
+                float[][,] verticePositions = new float[shapes.Length][,];
 
-                float[][][] splineInformation = new float[shapes.Length][][];
-                
+                //float[][][] splineInformation = new float[shapes.Length][][];
+
                 int index = 0;
 
                 foreach (GameObject shape in shapes)
@@ -82,34 +82,39 @@ public class PlayerBehaviour : MonoBehaviour
 
                     //grab the shape's spin- i mean spline
                     shapeSplines[index] = (shape.GetComponent<SpriteShapeController>().spline);
-                    verticePositions = new float[shapeSplines[index].GetPointCount(), 3];
+                    verticePositions[index] = new float[shapeSplines[index].GetPointCount(), 3];
 
+                    
 
                     for (int verticeIndex = 0; verticeIndex < shapeSplines[index].GetPointCount(); verticeIndex++)
                     {
                         TemporaryVector = shapeSplines[index].GetPosition(verticeIndex);
-                        verticePositions[verticeIndex, 0] = TemporaryVector.x;
-                        verticePositions[verticeIndex, 1] = TemporaryVector.y;
-                        verticePositions[verticeIndex, 2] = TemporaryVector.z;
+                        verticePositions[index][verticeIndex, 0] = TemporaryVector.x;
+                        verticePositions[index][verticeIndex, 1] = TemporaryVector.y;
+                        verticePositions[index][verticeIndex, 2] = TemporaryVector.z;
 
                     }
 
-                    splineInformation[index][0][0] = transformPositions[0];
-                    splineInformation[index][0][1] = transformPositions[1];
-                    splineInformation[index][0][2] = transformPositions[2];
+                    //splineInformation[index] = new float[shapeSplines[index].GetPointCount()][];
+                    //splineInformation[index][0] = transformPositions;
+                    
+                    //perhaps instead utilise the new keyword??? this may need to be possiblt moved about...
+                    //splineInformation[index][0][0] = transformPositions[0];
+                    //splineInformation[index][0][1] = transformPositions[1];
+                    //splineInformation[index][0][2] = transformPositions[2];
 
-                    for (int j = 0; j < shapeSplines[index].GetPointCount(); j++)
-                    {
-                        splineInformation[index][j + 1][0] = verticePositions[index,0];
-                        splineInformation[index][j + 1][1] = verticePositions[index,1];
-                        splineInformation[index][j + 1][2] = verticePositions[index,2];
-                    }
+                    //for (int j = 0; j < shapeSplines[index].GetPointCount(); j++)
+                    //{
+                    //    splineInformation[index][j + 1][0] = verticePositions[index,0];
+                    //    splineInformation[index][j + 1][1] = verticePositions[index,1];
+                    //    splineInformation[index][j + 1][2] = verticePositions[index,2];
+                    //}
                     
 
                     index++;
                 }
 
-                SpriteShapeSaveAndLoad.Save(splineInformation);
+                SpriteShapeSaveAndLoad.Save(transformPositions, verticePositions);
             }
         }
         
