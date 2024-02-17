@@ -22,10 +22,6 @@ public class CameraBehaviour : MonoBehaviour
     void Update()
     {
         transform.position = Vector3.Lerp(transform.position, new Vector3(PlayerTransform.position.x, PlayerTransform.position.y , transform.position.z), lerpDelay * Time.deltaTime);
-        //transform.position = new Vector3(PlayerTransform.position.x, PlayerTransform.position.y, transform.position.z);
-        //transform.rotation = PlayerTransform.rotation;
-        
-        
     }
 
 
