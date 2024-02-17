@@ -27,7 +27,7 @@ public class PlayerBehaviour : MonoBehaviour
     {
 
 
-        bool toggleTrail = Input.GetKeyDown(KeyCode.Space);
+        bool toggleTrail = Input.GetKeyDown(KeyCode.T);
         if (toggleTrail)
         {
             trailEmitting = !trailEmitting;
