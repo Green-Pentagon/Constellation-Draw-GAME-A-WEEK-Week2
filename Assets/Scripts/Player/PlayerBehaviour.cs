@@ -38,7 +38,7 @@ public class PlayerBehaviour : MonoBehaviour
             currentVerticeIndex++;
             ShapeSpline.InsertPointAt(currentVerticeIndex, transform.position);
         }
-        else if (RemoveVertice && currentVerticeIndex >= 1)
+        else if (RemoveVertice && currentVerticeIndex > 1)
         {
             ShapeSpline.RemovePointAt(currentVerticeIndex);
             currentVerticeIndex--;
