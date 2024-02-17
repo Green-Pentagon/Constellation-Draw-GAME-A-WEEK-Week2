@@ -23,8 +23,8 @@ public class PlayerBehaviour : MonoBehaviour
         void Start()
     {
         //LOAD SAVE
-        //SpriteShapeSaveAndLoad = GetComponent<SpriteShapeSaveAndLoad>();
-        //SpriteShapeSaveAndLoad.Load();
+        SpriteShapeSaveAndLoad = GetComponent<SpriteShapeSaveAndLoad>();
+        SpriteShapeSaveAndLoad.Load();
 
 
         rigidbody = GetComponent<Rigidbody2D>();
@@ -63,19 +63,19 @@ public class PlayerBehaviour : MonoBehaviour
 
 
                 GameObject[] shapes = GameObject.FindGameObjectsWithTag("SpriteShape");
-                Spline[] shapeSplines = new Spline[shapes.Length - 1];
+                Spline[] shapeSplines = new Spline[shapes.Length];
                 Vector3 rawTransformPosition;
-                float[][] transformPositions = new float[shapes.Length][];
+                float[,] transformPositions = new float[shapes.Length,3];
                 int index = 0;
 
                 foreach (GameObject shape in shapes)
                 {
-                    shapeSplines.Append(shape.GetComponent<SpriteShapeController>().spline);
-                    rawTransformPosition = shape.GetComponent<Transform>().position;
+                    shapeSplines[index] = (shape.GetComponent<SpriteShapeController>().spline);
+                    rawTransformPosition = shape.GetComponent<SpriteShapeController>().transform.position;
                     
-                    transformPositions[index][0] = rawTransformPosition.x;
-                    transformPositions[index][1] = rawTransformPosition.y;
-                    transformPositions[index][2] = rawTransformPosition.z;
+                    transformPositions[index,0] = rawTransformPosition.x;
+                    transformPositions[index,1] = rawTransformPosition.y;
+                    transformPositions[index,2] = rawTransformPosition.z;
 
                     index++;
                 }
@@ -103,9 +103,15 @@ public class PlayerBehaviour : MonoBehaviour
 
             }
         }
-            
+        try
+        {
+            ShapeSpline.SetPosition(currentVerticeIndex, transform.position);
+        }
+        catch
+        {
 
-        ShapeSpline.SetPosition(currentVerticeIndex, transform.position);
+        }
+        
     }
 
 

@@ -25,7 +25,7 @@ public class SpriteShapeSaveAndLoad : MonoBehaviour
         
     }
 
-    public void Save(Spline[] shapeInstance, float[][] transformPositions)
+    public void Save(Spline[] shapeInstance, float[,] transformPositions)
     {
         BinaryFormatter bf = new BinaryFormatter();
         FileStream file;
@@ -84,9 +84,9 @@ public class SpriteShapeSaveAndLoad : MonoBehaviour
 public class SaveData
 {
     public Spline[] splines;
-    public float[][] controllerTransforms; //store the transform positions from all of the sprite controllers that hold the spline.
+    public float[,] controllerTransforms; //store the transform positions from all of the sprite controllers that hold the spline.
 
-    public SaveData(Spline[] shapeInstance , float[][] transformPositions)
+    public SaveData(Spline[] shapeInstance , float[,] transformPositions)
     {
         splines = shapeInstance;
         controllerTransforms = transformPositions;
