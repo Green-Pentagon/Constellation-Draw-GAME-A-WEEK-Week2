@@ -23,14 +23,19 @@ public class PlayerBehaviour : MonoBehaviour
     private float terminalVelocity = 100.0f;
     private int currentVerticeIndex = 1;
     private bool drawing = true;
+    private bool startTrigger = true;
     private float[] playerSpawnRange = new float[] { -50.0f, -50.0f,
                                                       50.0f, 50.0f};
+
+
+
 
         // Start is called before the first frame update
         void Start()
     {
         //RANDOMISE SPAWN
         transform.position = new Vector3(Random.Range(playerSpawnRange[0], playerSpawnRange[2]), Random.Range(playerSpawnRange[1], playerSpawnRange[3]), transform.position.z);
+        
 
 
         //LOAD SAVE
@@ -46,7 +51,9 @@ public class PlayerBehaviour : MonoBehaviour
 
         ShapeSpline = spriteShapeController.spline;
         ShapeSpline.SetPosition(0, transform.position);
-        ShapeSpline.SetPosition(1, transform.position);
+        ShapeSpline.SetPosition(1, transform.position * 1.01f);
+
+
         //ShapeSpline.InsertPointAt(currentVerticeIndex, transform.position);
 
     }
@@ -125,7 +132,10 @@ public class PlayerBehaviour : MonoBehaviour
 
     private void FixedUpdate()
     {
-
+        if (startTrigger)
+        {
+            
+        }
         //movement
         float x_movement = Input.GetAxis("Horizontal");
         float y_movement = Input.GetAxis("Vertical");
