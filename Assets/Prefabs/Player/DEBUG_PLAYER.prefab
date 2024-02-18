@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 2642624801602495404}
   - component: {fileID: 755875285413675424}
   - component: {fileID: 3012024685926193505}
+  - component: {fileID: 907521994167933945}
   m_Layer: 0
   m_Name: DEBUG_PLAYER
   m_TagString: Player
@@ -175,3 +176,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ORIGINALCopySSC: {fileID: 7273957610035778146, guid: abe27c451115f7b46b8720923a89acbf, type: 3}
+  currentVerticeIndex: 1
+--- !u!114 &907521994167933945
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3150567388204302853}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9725db72f1cc1f4408623a5955298e3a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  debugSprite: {fileID: 4531094860481740912, guid: 915ebbd9bc5ca4a40ba87f5d3d1eb801, type: 3}
+  PrefabSpriteShape: {fileID: 7751211844329638018, guid: abe27c451115f7b46b8720923a89acbf, type: 3}

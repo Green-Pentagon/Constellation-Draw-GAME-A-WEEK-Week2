@@ -10,6 +10,8 @@ public class PlayerBehaviour : MonoBehaviour
 {
     
     public SpriteShapeController ORIGINALCopySSC;
+    public TextMeshProUGUI gameOverText;
+
     private SpriteShapeSaveAndLoad SpriteShapeSaveAndLoad;
     private SpriteShapeController spriteShapeController;
     private Spline ShapeSpline;
@@ -18,14 +20,21 @@ public class PlayerBehaviour : MonoBehaviour
     private float propulsionMultiplier = 15.0f; //multiplier to force of propulsion
     private int currentVerticeIndex = 1;
     private bool drawing = true;
+    private float[] playerSpawnRange = new float[] { -10.0f, -10.0f,
+                                                      10.0f, 10.0f};
 
         // Start is called before the first frame update
         void Start()
     {
+        //RANDOMISE SPAWN
+        transform.position = new Vector3(Random.Range(playerSpawnRange[0], playerSpawnRange[2]), Random.Range(playerSpawnRange[1], playerSpawnRange[3]), transform.position.z);
+
+
+
         //LOAD SAVE
         SpriteShapeSaveAndLoad = GetComponent<SpriteShapeSaveAndLoad>();
         SpriteShapeSaveAndLoad.Load();
-
+        gameOverText.enabled = false;
 
         rigidbody = GetComponent<Rigidbody2D>();
 
@@ -45,14 +54,17 @@ public class PlayerBehaviour : MonoBehaviour
         bool RemoveVertice = Input.GetKeyDown(KeyCode.Mouse1);
         bool FinaliseShape = Input.GetKeyDown(KeyCode.Return); //double check this works for regular enter key!
 
+
+
+
         if (drawing)
         {
-            if (AddVertice)
+            if (AddVertice) //ADDING TO SHAPE
             {
                 currentVerticeIndex++;
                 ShapeSpline.InsertPointAt(currentVerticeIndex, transform.position);
             }
-            else if (RemoveVertice && currentVerticeIndex > 1)
+            else if (RemoveVertice && currentVerticeIndex > 1) //REMOVING FROM SHAPE
             {
                 ShapeSpline.RemovePointAt(currentVerticeIndex);
                 currentVerticeIndex--;
@@ -60,6 +72,7 @@ public class PlayerBehaviour : MonoBehaviour
             else if (FinaliseShape)
             {
                 drawing = false;
+                rigidbody.velocity = Vector3.zero;
 
                 GameObject[] shapes = GameObject.FindGameObjectsWithTag("SpriteShape");
                 Spline[] shapeSplines = new Spline[shapes.Length];
@@ -87,8 +100,18 @@ public class PlayerBehaviour : MonoBehaviour
 
                     index++;
                 }
-
+                
                 SpriteShapeSaveAndLoad.Save(verticePositions);
+                gameOverText.enabled = true;
+                
+            }
+        }
+        else
+        {
+            if (FinaliseShape)
+            {
+                Debug.Log("Quitting!");
+                Application.Quit();
             }
         }
         
@@ -114,6 +137,7 @@ public class PlayerBehaviour : MonoBehaviour
         try
         {
             ShapeSpline.SetPosition(currentVerticeIndex, transform.position);
+            
         }
         catch
         {
