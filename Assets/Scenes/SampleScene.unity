@@ -1309,6 +1309,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   debugSprite: {fileID: 4531094860481740912, guid: 915ebbd9bc5ca4a40ba87f5d3d1eb801, type: 3}
+  PrefabSpriteShape: {fileID: 7751211844329638018, guid: abe27c451115f7b46b8720923a89acbf, type: 3}
 --- !u!1001 &7539833421518600080
 PrefabInstance:
   m_ObjectHideFlags: 0

@@ -13,6 +13,7 @@ public class SpriteShapeSaveAndLoad : MonoBehaviour
 {
     //public SpriteShapeController ORIGINALCopySSC;
     public GameObject debugSprite;
+    public GameObject PrefabSpriteShape;
     
     // Start is called before the first frame update
     void Start()
@@ -56,12 +57,31 @@ public class SpriteShapeSaveAndLoad : MonoBehaviour
             BinaryFormatter bf = new BinaryFormatter();
             FileStream file = File.Open(Application.persistentDataPath + "/save.dat", FileMode.Open);
             SaveData data = (SaveData)bf.Deserialize(file);
+            
+            GameObject currentSpriteShape;
+            Spline currentSpline;
+            Vector3 currentCoordinate;
 
-            for(int i = 0; i < data.splineCoords.Length;i++)
+            for (int i = 0; i < data.splineCoords.Length;i++)
             {
+                //create new sprite shape object and get its spline.
+                currentSpriteShape = Instantiate(PrefabSpriteShape, new Vector3(0.0f, 0.0f, 0.0f), transform.rotation);
+                currentSpline = currentSpriteShape.GetComponent<SpriteShapeController>().spline;
+
                 for (int j = 0; j < (data.splineCoords[i].Length /3); j++)
                 {
-                    Instantiate(debugSprite, new Vector3(data.splineCoords[i][j, 0], data.splineCoords[i][j, 1], data.splineCoords[i][j, 2]), transform.rotation);  
+                    currentCoordinate = new Vector3(data.splineCoords[i][j, 0], data.splineCoords[i][j, 1], data.splineCoords[i][j, 2]);
+                    
+                    if (j <= currentSpline.GetPointCount() - 1)//if the spline has existing points to move, simply move them, else create new points
+                    {
+                        currentSpline.SetPosition(j, currentCoordinate);
+                    }
+                    else
+                    {
+                        currentSpline.InsertPointAt(j, currentCoordinate);
+                    }
+
+                    Instantiate(debugSprite, currentCoordinate, transform.rotation);  //place debug sprite, can be removed or altered to fit theme later.
                 }
             }
 
