@@ -1,4 +1,4 @@
-//tutorial used to aid in creation: https://youtu.be/iB6h1FqPW2k
+//tutorial used to aid in rasterization: https://youtu.be/iB6h1FqPW2k
 
 using System;
 using System.Collections;
@@ -12,7 +12,7 @@ using UnityEngine.U2D;
 public class SpriteShapeSaveAndLoad : MonoBehaviour
 {
     //public SpriteShapeController ORIGINALCopySSC;
-    public GameObject debugSprite;
+    public GameObject CornerSprite;
     public GameObject PrefabSpriteShape;
     
     // Start is called before the first frame update
@@ -81,7 +81,7 @@ public class SpriteShapeSaveAndLoad : MonoBehaviour
                         currentSpline.InsertPointAt(j, currentCoordinate);
                     }
 
-                    Instantiate(debugSprite, currentCoordinate, transform.rotation);  //place debug sprite, can be removed or altered to fit theme later.
+                    Instantiate(CornerSprite, currentCoordinate, transform.rotation);  //place debug sprite, can be removed or altered to fit theme later.
                 }
             }
 

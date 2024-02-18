@@ -11,17 +11,20 @@ public class PlayerBehaviour : MonoBehaviour
     
     public SpriteShapeController ORIGINALCopySSC;
     public TextMeshProUGUI gameOverText;
+    public TextMeshProUGUI coordinatesOutput;
+    //public GameObject CornerObject;
 
     private SpriteShapeSaveAndLoad SpriteShapeSaveAndLoad;
     private SpriteShapeController spriteShapeController;
     private Spline ShapeSpline;
-    private Rigidbody2D rigidbody;
+    private Rigidbody2D rigidBody;
 
     private float propulsionMultiplier = 15.0f; //multiplier to force of propulsion
+    private float terminalVelocity = 100.0f;
     private int currentVerticeIndex = 1;
     private bool drawing = true;
-    private float[] playerSpawnRange = new float[] { -10.0f, -10.0f,
-                                                      10.0f, 10.0f};
+    private float[] playerSpawnRange = new float[] { -50.0f, -50.0f,
+                                                      50.0f, 50.0f};
 
         // Start is called before the first frame update
         void Start()
@@ -30,21 +33,21 @@ public class PlayerBehaviour : MonoBehaviour
         transform.position = new Vector3(Random.Range(playerSpawnRange[0], playerSpawnRange[2]), Random.Range(playerSpawnRange[1], playerSpawnRange[3]), transform.position.z);
 
 
-
         //LOAD SAVE
         SpriteShapeSaveAndLoad = GetComponent<SpriteShapeSaveAndLoad>();
         SpriteShapeSaveAndLoad.Load();
         gameOverText.enabled = false;
 
-        rigidbody = GetComponent<Rigidbody2D>();
+        rigidBody = GetComponent<Rigidbody2D>();
+        
 
         //instantiate a new copy of shape from prefab
         spriteShapeController = Instantiate(ORIGINALCopySSC, Vector3.zero, transform.rotation);
 
         ShapeSpline = spriteShapeController.spline;
         ShapeSpline.SetPosition(0, transform.position);
-        ShapeSpline.InsertPointAt(currentVerticeIndex, transform.position);
-        
+        //ShapeSpline.InsertPointAt(currentVerticeIndex, transform.position);
+
     }
 
     // Update is called once per frame
@@ -54,15 +57,15 @@ public class PlayerBehaviour : MonoBehaviour
         bool RemoveVertice = Input.GetKeyDown(KeyCode.Mouse1);
         bool FinaliseShape = Input.GetKeyDown(KeyCode.Return); //double check this works for regular enter key!
 
-
-
+        coordinatesOutput.text = "(" + (int)transform.position.x + "," + (int)transform.position.y + ")";
 
         if (drawing)
         {
             if (AddVertice) //ADDING TO SHAPE
             {
                 currentVerticeIndex++;
-                ShapeSpline.InsertPointAt(currentVerticeIndex, transform.position);
+                ShapeSpline.InsertPointAt(currentVerticeIndex, transform.position); 
+
             }
             else if (RemoveVertice && currentVerticeIndex > 1) //REMOVING FROM SHAPE
             {
@@ -72,7 +75,7 @@ public class PlayerBehaviour : MonoBehaviour
             else if (FinaliseShape)
             {
                 drawing = false;
-                rigidbody.velocity = Vector3.zero;
+                rigidBody.velocity = Vector3.zero;
 
                 GameObject[] shapes = GameObject.FindGameObjectsWithTag("SpriteShape");
                 Spline[] shapeSplines = new Spline[shapes.Length];
@@ -125,16 +128,19 @@ public class PlayerBehaviour : MonoBehaviour
         //movement
         float x_movement = Input.GetAxis("Horizontal");
         float y_movement = Input.GetAxis("Vertical");
-        
+
+        //prevent constant acceleration
+        rigidBody.velocity = Vector2.ClampMagnitude(rigidBody.velocity, terminalVelocity);
+
         if (drawing)
         {
             if ((x_movement != 0.0f || y_movement != 0.0f)) //MOVEMENT TRIGGERED
             {
-                rigidbody.AddForce(new Vector2(x_movement, y_movement) * propulsionMultiplier, ForceMode2D.Force);
+                rigidBody.AddForce(new Vector2(x_movement, y_movement) * propulsionMultiplier, ForceMode2D.Force);
 
             }
         }
-        try
+        try//one here to prevent a flood of error messages in editor, when sprite shape vertices are too close to one another for the rendering to work properly
         {
             ShapeSpline.SetPosition(currentVerticeIndex, transform.position);
             
