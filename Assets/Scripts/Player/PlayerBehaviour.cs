@@ -46,6 +46,7 @@ public class PlayerBehaviour : MonoBehaviour
 
         ShapeSpline = spriteShapeController.spline;
         ShapeSpline.SetPosition(0, transform.position);
+        ShapeSpline.SetPosition(1, transform.position);
         //ShapeSpline.InsertPointAt(currentVerticeIndex, transform.position);
 
     }
