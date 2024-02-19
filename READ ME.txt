@@ -1,0 +1,29 @@
+HOW TO PLAY:
+
+Fill the endless* void of space with user-generated star constellations!
+
+
+- Use WASD or arrow keys to control the player's movement.
+- Use Left mouse button to add a point to your shape.
+- Use Right mouse button to remove the most recent point from your shape (except origin).
+- Once you've drawn a shape you are happy with, press enter to save it.
+- The shape you have drawn will appear in the game the next time you start it.
+
+The save information is stored in Users/.../AppData/LocalLow/DefaultCompany/Constellation Draw/save.dat
+
+
+Known Bugs:
+- Due to the way that Sprite Shapes in Unity operate, your line might disappear or begin flickering if it is too long: placing a point may resolve this issue, or simply make shapes out of smaller lines
+- Origin point sadly cannot be moved by the player :<
+- Starting position is limited, due to unknown bug causing the sprite shape to not render when starting far from origin.
+
+REFERENCES:
+
+Starter code for Serilization:
+Blue Mask Games (2022) Save and Load Easily with Serialization in Unity!.  21 March. Available at: https://www.youtube.com/watch?v=iB6h1FqPW2k (Accessed: 18 Feb 2023).
+
+Images: Primary Source, made using https://www.pixilart.com/
+
+Audio: Primary Source, made using... my mouth!
+
+*current version of the void is 500x500 Units large.
