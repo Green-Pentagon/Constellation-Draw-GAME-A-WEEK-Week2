@@ -12,6 +12,9 @@ public class PlayerBehaviour : MonoBehaviour
     public SpriteShapeController ORIGINALCopySSC;
     public TextMeshProUGUI gameOverText;
     public TextMeshProUGUI coordinatesOutput;
+    public AudioSource AddCornerSound;
+    public AudioSource RemoveCornerSound;
+    public AudioSource FinaliseShapeSound;
     //public GameObject CornerObject;
 
     private SpriteShapeSaveAndLoad SpriteShapeSaveAndLoad;
@@ -72,13 +75,18 @@ public class PlayerBehaviour : MonoBehaviour
             if (AddVertice) //ADDING TO SHAPE
             {
                 currentVerticeIndex++;
-                ShapeSpline.InsertPointAt(currentVerticeIndex, transform.position); 
+                ShapeSpline.InsertPointAt(currentVerticeIndex, transform.position);
+                RemoveCornerSound.Stop();
+                AddCornerSound.Play();
+                
 
             }
             else if (RemoveVertice && currentVerticeIndex > 1) //REMOVING FROM SHAPE
             {
                 ShapeSpline.RemovePointAt(currentVerticeIndex);
                 currentVerticeIndex--;
+                AddCornerSound.Stop();
+                RemoveCornerSound.Play();
             }
             else if (FinaliseShape)
             {
@@ -114,7 +122,9 @@ public class PlayerBehaviour : MonoBehaviour
                 
                 SpriteShapeSaveAndLoad.Save(verticePositions);
                 gameOverText.enabled = true;
-                
+                FinaliseShapeSound.Play();
+
+
             }
         }
         else
